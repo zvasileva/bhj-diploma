@@ -13,7 +13,9 @@ class AccountsWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
-
+    this.element = element;
+    this.registerEvents();
+    this.update();
   }
 
   /**
@@ -24,7 +26,26 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
+    const accCreate = this.element.querySelector('.create-account'); 
 
+
+     this.element.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      let target = e.target;
+
+      this.onSelectAccount( target ) ;  
+      
+      const addAcc = target.closest('.create-account');
+
+      if (addAcc) {
+        const targetModal = App.getModal( 'createAccount' );
+        targetModal.open();     
+      }   
+        
+      
+    });     
+   
   }
 
   /**
@@ -38,6 +59,17 @@ class AccountsWidget {
    * метода renderItem()
    * */
   update() {
+    const userCurrent = JSON.parse(localStorage.getItem('user'));
+    if (userCurrent) {
+      const xhr = Account.list(userCurrent, ( err, resp ) => {
+        console.log( resp.data );
+        this.clear();
+        for (let item of resp.data) {
+          this.renderItem( item );
+
+        }
+      });      
+    }
 
   }
 
@@ -47,7 +79,11 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-
+    const accounts = Array.from(this.element.querySelectorAll('.account'));
+    for (let i = 0; i < accounts.length; i++) {
+      accounts[i].remove();
+    }  
+  
   }
 
   /**
@@ -59,6 +95,31 @@ class AccountsWidget {
    * */
   onSelectAccount( element ) {
 
+      const parent = element.closest('.account');
+      const accounts = element.closest('.accounts-panel');
+
+      if (!parent) {
+          return;
+      }
+
+      let activeAcc = accounts.querySelector('.active');  
+
+      //if (activeAcc === parent) {
+      //  return;
+      //}
+
+      if (activeAcc){
+        activeAcc.classList.remove('active');    
+      }
+
+      activeAcc = parent;
+      activeAcc.classList.add('active');  
+
+      const accId = parent.getAttribute("data-id");
+
+      //App.clear();  
+      App.showPage( 'transactions', { account_id: accId });
+          
   }
 
   /**
@@ -67,7 +128,19 @@ class AccountsWidget {
    * item - объект с данными о счёте
    * */
   getAccountHTML( item ) {
-
+    const id = item.id;
+    const name = item.name;
+    const sum = item.sum;
+    const itemHtml = `
+    <li class="account" data-id="${id}">
+      <a href="#">
+        <span>${name}</span> /
+        <span>${sum} ₽</span>
+      </a>
+    </li>
+    `;
+    return itemHtml;
+  
   }
 
   /**
@@ -77,6 +150,8 @@ class AccountsWidget {
    * и добавляет его внутрь элемента виджета
    * */
   renderItem( item ) {
-
+    const itemHtml = this.getAccountHTML(item);
+    this.element.innerHTML += itemHtml;
   }
 }
+
