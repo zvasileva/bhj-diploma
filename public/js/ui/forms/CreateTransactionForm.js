@@ -52,6 +52,7 @@ class CreateTransactionForm extends AsyncForm {
    * в котором находится форма
    * */
   onSubmit( options ) {
+    console.log(options);
     const xhr = Transaction.create(options.data, ( err, resp ) => {
       console.log( resp );
       this.element.reset();

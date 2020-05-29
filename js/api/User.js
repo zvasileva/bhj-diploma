@@ -5,12 +5,16 @@
  * Имеет свойство URL, равное '/user'.
  * */
 class User {
+
+  static URL = '/user';
+  static HOST = 'http://localhost:8000';
+
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
   static setCurrent(user) {
-
+    localStorage.user = JSON.stringify(user);
   }
 
   /**
@@ -18,7 +22,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-
+    delete localStorage.user;
   }
 
   /**
@@ -26,7 +30,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-
+    return localStorage.user;
   }
 
   /**
@@ -34,7 +38,12 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch( data, callback = f => f ) {
-
+    const xhr = createRequest({
+      url: this.HOST + this.URL + '/current',
+      data: data,
+      method: 'GET',
+      callback: callback
+    });  
   }
 
   /**
@@ -44,7 +53,12 @@ class User {
    * User.setCurrent.
    * */
   static login( data, callback = f => f ) {
-
+    const xhr = createRequest({
+      url: this.HOST + this.URL + '/login',
+      data: data,
+      method: 'POST',
+      callback: callback
+    });  
   }
 
   /**
@@ -54,7 +68,12 @@ class User {
    * User.setCurrent.
    * */
   static register( data, callback = f => f ) {
-
+    const xhr = createRequest({
+      url: this.HOST + this.URL + '/register',
+      data: data,
+      method: 'POST',
+      callback: callback
+    });
   }
 
   /**
@@ -62,6 +81,11 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout( data, callback = f => f ) {
-
+    const xhr = createRequest({
+      url: this.HOST + this.URL + '/logout',
+      data: data,
+      method: 'POST',
+      callback: callback
+    });  
   }
 }

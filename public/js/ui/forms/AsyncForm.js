@@ -52,13 +52,18 @@ class AsyncForm {
     const formData = this.getData();
     let data = {};
     const entries = formData.entries();
-
     for (let item of entries) {
       const key = item[ 0 ], value = item[ 1 ];
       data[key] = value;
     }    
     const url = this.element.getAttribute("action");
     const method = this.element.getAttribute("method");
+    
+    console.log(this.element);
+    console.log(url);
+    console.log(data);
+
+
     this.onSubmit( {
       "url": url,
       "method": method,

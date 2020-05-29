@@ -56,12 +56,17 @@ const createRequest = (options = {}) => {
         const xhr = new XMLHttpRequest;
         const formData = new FormData;
 
+        
+
         for (let i in options.data) {
             formData.append( i, options.data[i] );
+            console.log(options.data[i]);
         }   
         
         try {
           xhr.open( 'POST', options.url );
+
+          console.log(options.url );
           xhr.responseType = "json";
   
           xhr.addEventListener('readystatechange', function() {

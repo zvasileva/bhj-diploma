@@ -18,6 +18,25 @@ class Sidebar {
    * при нажатии на кнопку .sidebar-toggle
    * */
   static initToggleButton() {
+    const button = document.querySelector('.sidebar-toggle');    
+    const body = document.querySelector('.sidebar-mini'); 
+
+    function openSidebar () {
+      const activeSidebar = document.querySelector( '.sidebar-open');
+      if (activeSidebar) {
+        activeSidebar.classList.remove('sidebar-open');
+        activeSidebar.classList.add('sidebar-collapse');
+        return;
+      }  
+      body.classList.add('sidebar-open');
+      //body.classList.add('sidebar-collapse');
+    }
+
+    button.addEventListener('click', e => {
+      e.preventDefault();
+      openSidebar();       
+    } );   
+  
 
   }
 
@@ -29,7 +48,32 @@ class Sidebar {
    * выходу устанавливает App.setState( 'init' )
    * */
   static initAuthLinks() {
-
+    const reg = document.querySelector('.menu-item_register');      
+     reg.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetModal = App.getModal( 'register' );
+      targetModal.open(); 
+     }); 
+     
+     const login = document.querySelector('.menu-item_login');      
+     login.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetModal = App.getModal( 'login' );
+      targetModal.open(); 
+     });     
+     
+     const logout = document.querySelector('.menu-item_logout');      
+     logout.addEventListener("click", (e) => {
+      e.preventDefault();
+      const userCurrent = JSON.parse(localStorage.getItem('user'));
+      const xhr = User.logout(userCurrent, ( err, resp ) => {
+        console.log( resp );
+        User.unsetCurrent();
+        App.setState( 'init' );
+      });
+     });         
+       
   }
 
 }
+

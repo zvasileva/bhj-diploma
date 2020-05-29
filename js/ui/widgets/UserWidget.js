@@ -11,7 +11,8 @@ class UserWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
-
+    this.element = element;
+    this.userName = element.querySelector('.user-name');  
   }
 
   /**
@@ -22,6 +23,10 @@ class UserWidget {
    * авторизованного пользователя
    * */
   update() {
+    const userCurrent = JSON.parse(localStorage.getItem('user'));
+    if (userCurrent) {
+      this.userName.textContent = userCurrent.name;
+    }
 
   }
 }

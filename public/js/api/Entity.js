@@ -16,7 +16,7 @@ class Entity {
    * */
   static list( data, callback = f => f ) {
     const xhr = createRequest({
-      url: this.URL,
+      url: this.HOST + this.URL,
       data: data,
       method: 'GET',
       callback: callback
@@ -29,13 +29,13 @@ class Entity {
    * на сервер. (в зависимости от того,
    * что наследуется от Entity)
    * */
-  static create( data, callback = f => f ) {
-    const modifiedData = Object.assign({ _method: 'PUT' }, data );
+  static create( data, callback = f => f ) {  
+    //const modifiedData = Object.assign({ _method: 'PUT' }, data );
+    //console.log(modifiedData);
     console.log(data);
-    console.log(modifiedData);
     const xhr = createRequest({
-      url: this.URL,
-      data: modifiedData,
+      url: this.HOST + this.URL,
+      data: data, //modifiedData,
       method: 'POST',
       callback: callback
     });  
@@ -47,8 +47,10 @@ class Entity {
    * */
   static get( id = '', data, callback = f => f ) {
     let modifiedData = Object.assign({ id: id }, data );
+    console.log(data);
+    console.log(modifiedData);    
     const xhr = createRequest({
-      url: this.URL + `/${id}/`,
+      url: this.HOST + this.URL + `/${id}/`,
       data: modifiedData, // +id
       method: 'GET',
       callback: callback
@@ -63,7 +65,7 @@ class Entity {
     let modifiedData = Object.assign({ _method: 'DELETE' }, data );
     modifiedData = Object.assign({ id: id }, modifiedData );
     const xhr = createRequest({
-      url: this.URL,
+      url: this.HOST + this.URL,
       data: modifiedData,
       method: 'POST',
       callback: callback
